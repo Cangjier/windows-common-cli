@@ -648,27 +648,6 @@ public class WindowCommands
     }
 
     /// <summary>
-    /// OCR识别窗口
-    /// </summary>
-    /// <param name="hWnd"></param>
-    /// <param name="outputPath"></param>
-    /// <returns></returns>
-    public static async Task OCRWindow(
-        [ArgsIndex]string hWnd,
-        [ArgsIndex]string outputPath="")
-    {
-        await Task.CompletedTask;
-        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        using var image = window.Capture();
-        var imagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
-#pragma warning disable CA1416 // 验证平台兼容性
-        image.Save(imagePath, ImageFormat.Png);
-#pragma warning restore CA1416 // 验证平台兼容性
-        await OCRCommands.Detect(imagePath, outputPath);
-        File.Delete(imagePath);
-    }
-
-    /// <summary>
     /// 鼠标移动
     /// </summary>
     /// <param name="deltaX"></param>

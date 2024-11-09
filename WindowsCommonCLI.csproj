@@ -11,7 +11,8 @@
     <IntermediateOutputPath>$([System.IO.Path]::GetTempPath())Temp\$(MSBuildProjectName)\$(Configuration)\$(Platform)\obj\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TidyWin32\TidyWin32.csproj" />
+    <PackageReference Include="TidyConsole" Version="1.0.5" />
+    <PackageReference Include="TidyWin32" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="data\7-zip.dll">

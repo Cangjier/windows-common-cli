@@ -25,7 +25,6 @@ argsRouter.Register(["send-keys"], WindowCommands.SendKeys);
 argsRouter.Register(["active-english-keyboard"], WindowCommands.ActiveEnglishKeyboard);
 argsRouter.Register(["match-window"], WindowCommands.MatchWindow);
 argsRouter.Register(["close-window"], WindowCommands.CloseWindow);
-argsRouter.Register(["ocr-window"], WindowCommands.OCRWindow);
 argsRouter.Register(["mouse-move"], WindowCommands.MouseMove);
 argsRouter.Register(["mouse-move-to"], WindowCommands.MouseMoveTo);
 argsRouter.Register(["mouse-click"], WindowCommands.MouseClick);
@@ -37,14 +36,8 @@ argsRouter.Register(["delete-directory"], IOCommands.DeleteDirectory);
 argsRouter.Register(["extract"], CompressCommands.Extract);
 argsRouter.Register(["compress"], CompressCommands.Compress);
 
-argsRouter.Register(["run"], TypeSharpCommands.Run);
-argsRouter.Register(["bat"], TypeSharpCommands.Batch);
-argsRouter.Register(["package"], TypeSharpCommands.Package);
-
 argsRouter.Register(["markdown-increase"], MarkdownCommands.Increase);
 
 argsRouter.Register(["kill-process"], ProcessCommands.Kill);
-
-argsRouter.Register(["api"], ApiCommands.Run);
 
 await argsRouter.Route(args);
