@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <AssemblyName>wcl</AssemblyName>
+    <Platforms>AnyCPU;x64</Platforms>
+    <BaseOutputPath>$([System.IO.Path]::GetTempPath())Temp\$(MSBuildProjectName)\$(Configuration)\$(Platform)\bin\</BaseOutputPath>
+    <IntermediateOutputPath>$([System.IO.Path]::GetTempPath())Temp\$(MSBuildProjectName)\$(Configuration)\$(Platform)\obj\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TidyWin32\TidyWin32.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="data\7-zip.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\7z.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\7z.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Develop.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Readme.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WindowsCommonCLI": {
+      "commandName": "Project",
+      "commandLineArgs": "func P:\\阿里云盘\\Archive\\NX-Installer\\1.0.240828.1\\mian.bat",
+      "remoteDebugEnabled": false,
+      "remoteDebugMachine": "DESKTOP-9V2B1LE:4026",
+      "authenticationMode": "None",
+      "hotReloadEnabled": false
+    }
+  }
+}
