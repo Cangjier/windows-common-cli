@@ -28,7 +28,7 @@ wcl.exe compress {CompressFilePath} {Paths}
   - g/Button，通过正则匹配WindowText/Text/ClassName
 
 ## get-window
-获取指定window的信息
+获取指定window的信息，当window是特殊类型时，信息也会包含特殊信息。
 ```
 wcl.exe get-window {hWnd} {OutputPath}
 ```
