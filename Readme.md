@@ -1,25 +1,5 @@
 ﻿# Windows Common CLI
 
-# 脚本
-
-## run
-
-```
-wcl.exe run {ScriptPath}
-```
-
-## package
-
-```
-wcl.exe package {InputDirectory}
-```
-
-## bat
-
-```
-wcl.exe bat {ScriptPath}
-```
-
 # 压缩/解压缩
 
 ## extract
@@ -46,6 +26,12 @@ wcl.exe compress {CompressFilePath} {Paths}
   - 整数，窗口句柄
   - 0xFFFFFFFF，十六进制表达的窗口句柄
   - g/Button，通过正则匹配WindowText/Text/ClassName
+
+## get-window
+获取指定window的信息
+```
+wcl.exe get-window {hWnd} {OutputPath}
+```
 
 ## list-windows
 
@@ -97,33 +83,15 @@ wcl.exe find-window-title {Regex} {OutputPath}
 wcl.exe find-child-window {hWnd} {Regex} {OutputPath}
 ```
 
-## find-child-window-combobox
+## select-combobox-index
 
 ```
-wcl.exe find-child-window-combobox {hWnd} {OutputPath}
+wcl.exe select-combobox-index {hWnd} {index}
 ```
-
-## click-child-window-text
-
-```
-wcl.exe click-child-window-text {hWnd} {Regex} --method {Method} --count {Count}
-```
-
-- Method：点击的方案，0-3，默认是0
-- Count：点击的次数，默认是1
-
-## set-child-window-text
-
-根据正则去匹配子窗口的WindowText/Text/ClassName，并设置文本
+## select-combobox-text
 
 ```
-wcl.exe set-child-window-text-class-name {hWnd} {RegexString} {Text} --type {window-text/text}
-```
-
-## send-child-window-keys
-
-```
-wcl.exe send-child-window-keys {hWnd} {RegexString} {Keys}
+wcl.exe select-combobox-index {hWnd} {item1} {item2}
 ```
 
 ## send-text
@@ -175,12 +143,6 @@ export interface WindowMatchState {
 
 ```
 wcl.exe close-window {hWnd}
-```
-
-## ocr-window
-
-```
-wcl.exe ocr-window {hWnd} {OutputPath}
 ```
 
 ## mouse-move

@@ -300,45 +300,6 @@ public class WindowCommands
     }
 
     /// <summary>
-    /// 在子窗口中查找ComboBox
-    /// </summary>
-    /// <param name="hWnd"></param>
-    /// <param name="outputPath"></param>
-    /// <returns></returns>
-    public static async Task FindChildWindowComboBox(
-        [ArgsIndex] string hWnd,
-        [ArgsIndex] string? outputPath = null)
-    {
-        await Task.CompletedTask;
-        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        var children = window.GetChildren();
-        Win32.ComboBoxInterface? findedComboBox = null;
-        foreach (var child in children)
-        {
-            if (child.IsComboBox)
-            {
-                findedComboBox = child.Target;
-            }
-        }
-        if (outputPath != null)
-        {
-            if (findedComboBox != null)
-            {
-                findedComboBox.InitializeInfomation();
-                findedComboBox.Target.Save(outputPath);
-            }
-            else
-            {
-                File.WriteAllText(outputPath, "{}", Util.UTF8);
-            }
-        }
-        else
-        {
-            Console.WriteLine(findedComboBox?.ToString());
-        }
-    }
-
-    /// <summary>
     /// 选中ComboBox的某个选项
     /// </summary>
     /// <param name="hWnd"></param>
@@ -381,191 +342,19 @@ public class WindowCommands
     }
 
     /// <summary>
-    /// 根据窗口标题点击子窗口
+    /// 获取Window的信息
     /// </summary>
     /// <param name="hWnd"></param>
-    /// <param name="regex"></param>
-    /// <param name="method"></param>
-    /// <param name="count"></param>
+    /// <param name="outputPath"></param>
     /// <returns></returns>
-    public static async Task ClickChildWindowText(
+    public static async Task GetWindow(
         [ArgsIndex] string hWnd,
-        [ArgsIndex] string regex,
-        [ArgsAliases("--method")] int method = 0,
-        [ArgsAliases("--count")] int count = 1)
+        [ArgsIndex] string outputPath)
     {
         await Task.CompletedTask;
         Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        var regexInstance = new Regex(regex);
-        var children = window.GetChildren();
-        Win32.WindowInterface? findedWindow = null;
-        foreach (var child in children)
-        {
-            if (regexInstance.IsMatch(child.WindowText))
-            {
-                findedWindow = child;
-                break;
-            }
-        }
-        if (findedWindow != null)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                switch (method)
-                {
-                    case 0:
-                        findedWindow.WM_Click();
-                        break;
-                    case 1:
-                        findedWindow.BM_Click();
-                        break;
-                    case 2:
-                        findedWindow.MOUSEEVENTF_Click();
-                        break;
-                    case 3:
-                        findedWindow.SendInput_Click();
-                        break;
-                }
-            }
-        }
-        else
-        {
-            Console.WriteLine("未找到匹配的子窗口");
-        }
-    }
-
-    /// <summary>
-    /// 根据窗口信息点击子窗口
-    /// </summary>
-    /// <param name="hWnd"></param>
-    /// <param name="regex"></param>
-    /// <param name="method"></param>
-    /// <param name="count"></param>
-    /// <returns></returns>
-    public static async Task ClickChildWindow(
-        [ArgsIndex] string hWnd,
-        [ArgsIndex] string regex,
-        [ArgsAliases("--method")] int method = 0,
-        [ArgsAliases("--count")] int count = 1)
-    {
-        await Task.CompletedTask;
-        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        var regexInstance = new Regex(regex);
-        var children = window.GetChildren();
-        Win32.WindowInterface? findedWindow = null;
-        foreach (var child in children)
-        {
-            if (regexInstance.IsMatch(child.WindowText) || regexInstance.IsMatch(child.Text) || regexInstance.IsMatch(child.ClassName))
-            {
-                findedWindow = child;
-                break;
-            }
-        }
-        if (findedWindow != null)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                switch (method)
-                {
-                    case 0:
-                        findedWindow.WM_Click();
-                        break;
-                    case 1:
-                        findedWindow.BM_Click();
-                        break;
-                    case 2:
-                        findedWindow.MOUSEEVENTF_Click();
-                        break;
-                    case 3:
-                        findedWindow.SendInput_Click();
-                        break;
-                }
-            }
-        }
-        else
-        {
-            Console.WriteLine("未找到匹配的子窗口");
-        }
-    }
-
-    /// <summary>
-    /// 设置子窗口文本
-    /// </summary>
-    /// <param name="hWnd"></param>
-    /// <param name="regexString"></param>
-    /// <param name="text"></param>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static async Task SetChildWindowText(
-        [ArgsIndex] string hWnd,
-        [ArgsIndex] string regexString,
-        [ArgsIndex] string text,
-        [ArgsAliases("--type")] string type = "window-text")
-    {
-        await Task.CompletedTask;
-        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        var children = window.GetChildren();
-        Win32.WindowInterface? findedWindow = null;
-        Regex regex = new(regexString);
-        foreach (var child in children)
-        {
-            if (regex.IsMatch(child.WindowText) || regex.IsMatch(child.Text) || regex.IsMatch(child.ClassName))
-            {
-                findedWindow = child;
-                break;
-            }
-        }
-        if (findedWindow != null)
-        {
-            Console.WriteLine(findedWindow.ToString());
-            if (type == "window-text")
-            {
-                findedWindow.WindowText = text;
-            }
-            else if (type == "text")
-            {
-                findedWindow.Text = text;
-            }
-        }
-        else
-        {
-            Console.WriteLine("未找到匹配的子窗口");
-        }
-    }
-
-    /// <summary>
-    /// 设置子窗口文本
-    /// </summary>
-    /// <param name="hWnd"></param>
-    /// <param name="regexString"></param>
-    /// <param name="text"></param>
-    /// <returns></returns>
-    public static async Task SendChildWindowKeys(
-        [ArgsIndex] string hWnd,
-        [ArgsIndex] string regexString,
-        [ArgsIndex] string text)
-    {
-        await Task.CompletedTask;
-        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        var children = window.GetChildren();
-        Win32.WindowInterface? findedWindow = null;
-        Regex regex = new(regexString);
-        foreach (var child in children)
-        {
-            if (regex.IsMatch(child.WindowText) || regex.IsMatch(child.Text) || regex.IsMatch(child.ClassName))
-            {
-                findedWindow = child;
-                break;
-            }
-        }
-        if (findedWindow != null)
-        {
-            findedWindow.SendKeys(text);
-        }
-        else
-        {
-            Console.WriteLine("未找到匹配的子窗口");
-        }
+        window.InitializeInfomation();
+        window.Target.Save(outputPath);
     }
 
     /// <summary>
