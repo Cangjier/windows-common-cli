@@ -33,6 +33,15 @@ public class Window(Json target)
     }
 
     /// <summary>
+    /// 转字符串
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        return Target.ToString();
+    }
+
+    /// <summary>
     /// 窗口标题
     /// </summary>
     public string Title

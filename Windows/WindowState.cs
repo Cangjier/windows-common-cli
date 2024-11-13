@@ -1,4 +1,5 @@
-﻿using TidyHPC.LiteJson;
+﻿using TidyHPC.Extensions;
+using TidyHPC.LiteJson;
 using TidyWin32;
 
 namespace WindowsCommonCLI.Windows;
@@ -25,7 +26,14 @@ public class WindowState(Json target)
     /// </summary>
     /// <param name="cache"></param>
     /// <returns></returns>
-    public async Task<bool> IsMatch(Cache cache)
+    public async Task<bool> IsMatch(Cache cache) => await IsMatchV2(cache);
+
+    /// <summary>
+    /// 是否匹配
+    /// </summary>
+    /// <param name="cache"></param>
+    /// <returns></returns>
+    public async Task<bool> IsMatchV1(Cache cache)
     {
         int interval = 0;
         int timeout = 0;
@@ -38,7 +46,7 @@ public class WindowState(Json target)
         {
             Target.ForeachArray(item => windows.Add(item));
         }
-        foreach(var window in windows)
+        foreach (var window in windows)
         {
             var target = window.Target;
             if (target.ContainsKey("Interval"))
@@ -50,7 +58,7 @@ public class WindowState(Json target)
                 timeout = target.Read("Timeout", 0);
             }
         }
-        
+
         var startTime = DateTime.Now;
         while (true)
         {
@@ -84,6 +92,106 @@ public class WindowState(Json target)
                 return false;
             }
             await Task.Delay(interval);
+        }
+    }
+
+    /// <summary>
+    /// 是否匹配
+    /// </summary>
+    /// <param name="cache"></param>
+    /// <returns></returns>
+    public async Task<bool> IsMatchV2(Cache cache)
+    {
+        int interval = 0;
+        int timeout = 0;
+        List<Window> rules = [];
+        if (Target.IsObject)
+        {
+            rules.Add(Target);
+        }
+        else if (Target.IsArray)
+        {
+            Target.ForeachArray(item => rules.Add(item));
+        }
+        foreach (var window in rules)
+        {
+            var target = window.Target;
+            if (target.ContainsKey("Interval"))
+            {
+                interval = target.Read("Interval", 0);
+            }
+            if (target.ContainsKey("Timeout"))
+            {
+                timeout = target.Read("Timeout", 0);
+            }
+        }
+
+        var startTime = DateTime.Now;
+        while (true)
+        {
+            Win32.WindowInterface[]? matchResult = null;
+            Win32.WindowInterface[] lastWindows = cache.CloneTopWindows();
+            var firsRule = rules.First();
+            var nextRules = rules.Skip(1).ToArray();
+            foreach (var window in lastWindows)
+            {
+                if (firsRule.IsMatch(window))
+                {
+                    Match(nextRules, [window], x =>
+                    {
+                        matchResult = x;
+                        return MatchFlag.StopMatch;
+                    });
+                }
+            }
+            if (matchResult != null)
+            {
+                for(int i = 0; i < rules.Count; i++)
+                {
+                    var rule = rules[i];
+                    var window = matchResult[i];
+                    window.InitializeInfomation();
+                    rule.Target.Set("Window", window.Target);
+                }
+                return true;
+            }
+            if (DateTime.Now - startTime > TimeSpan.FromMilliseconds(timeout))
+            {
+                return false;
+            }
+            await Task.Delay(interval);
+        }
+    }
+
+    /// <summary>
+    /// 匹配所有窗口
+    /// </summary>
+    /// <param name="rules"></param>
+    /// <param name="parentWindows"></param>
+    /// <param name="onMatch"></param>
+    public static void Match(Window[] rules, Win32.WindowInterface[] parentWindows, Func<Win32.WindowInterface[],MatchFlag> onMatch)
+    {
+        var windows = parentWindows.Last().GetChildren();
+        var firstRule = rules.First();
+        var nextRules = rules.Skip(1).ToArray();
+        foreach (var item in windows)
+        {
+            if (firstRule.IsMatch(item))
+            {
+                var nextWindows = item.GetChildren();
+                Win32.WindowInterface[] result = [.. parentWindows, item];
+                if (nextRules.Length == 0)
+                {
+                    if (onMatch(result)== MatchFlag.StopMatch)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    Match(nextRules, result, onMatch);
+                }
+            }
         }
     }
 }
