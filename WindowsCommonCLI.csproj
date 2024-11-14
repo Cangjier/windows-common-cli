@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,9 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TidyConsole" Version="1.0.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TidyWin32\TidyWin32.csproj" />
+    <PackageReference Include="TidyWin32" Version="1.0.3" />
   </ItemGroup>
   <ItemGroup>
     <None Update="data\7-zip.dll">
