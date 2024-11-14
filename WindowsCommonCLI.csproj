@@ -12,7 +12,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TidyConsole" Version="1.0.5" />
-    <PackageReference Include="TidyWin32" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TidyWin32\TidyWin32.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="data\7-zip.dll">
@@ -22,6 +24,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="data\7z.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\chi_sim.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\tesseract.7z">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Develop.md">

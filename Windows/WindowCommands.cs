@@ -1,4 +1,5 @@
-﻿using System.Drawing.Imaging;
+﻿using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
 using TidyHPC.LiteJson;
 using TidyHPC.Routers;
@@ -473,4 +474,154 @@ public class WindowCommands
         await Task.CompletedTask;
         Win32.MouseInterface.Click();
     }
+
+    /// <summary>
+    /// 鼠标点击指定窗口
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <returns></returns>
+    public static async Task MouseClickWindow(
+        [ArgsIndex] string hWnd)
+    {
+        await Task.CompletedTask;
+        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
+        var location = window.Location;
+        var size = window.Size;
+        Win32.MouseInterface.MoveTo(location.X + size.Width / 2, location.Y + size.Height / 2);
+        Win32.MouseInterface.Click();
+    }
+
+    /// <summary>
+    /// 鼠标点击指定窗口
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="xRatio"></param>
+    /// <param name="yRatio"></param>
+    /// <returns></returns>
+    public static async Task MouseClickWindowAtRatio(
+        [ArgsIndex] string hWnd,
+        [ArgsIndex]string xRatio,
+        [ArgsIndex]string yRatio)
+    {
+        await Task.CompletedTask;
+        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
+        var location = window.Location;
+        var size = window.Size;
+        var x = location.X + size.Width * double.Parse(xRatio);
+        var y = location.Y + size.Height * double.Parse(yRatio);
+        window.SetForeground();
+        Win32.MouseInterface.MoveTo((int)x, (int)y);
+        Win32.MouseInterface.Click();
+    }
+
+    /// <summary>
+    /// 鼠标点击指定窗口
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="xDelta"></param>
+    /// <param name="yDelta"></param>
+    /// <returns></returns>
+    public static async Task MouseClickWindowAt(
+        [ArgsIndex] string hWnd,
+        [ArgsIndex] string xDelta,
+        [ArgsIndex] string yDelta,
+        [ArgsAliases("--delay")] string delay="")
+    {
+        int delayTime = 0;
+        if (delay != "")
+        {
+            delayTime = int.Parse(delay);
+        }
+        await Task.CompletedTask;
+        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
+        var location = window.Location;
+        var size = window.Size;
+        var x = location.X + int.Parse(xDelta);
+        var y = location.Y + int.Parse(yDelta);
+        window.SetForeground();
+        if(delayTime > 0) await Task.Delay(delayTime);
+        Win32.MouseInterface.MoveTo((int)x, (int)y);
+        if (delayTime > 0) await Task.Delay(delayTime);
+        Win32.MouseInterface.Click();
+    }
+
+    /// <summary>
+    /// OCR窗口
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="outputPath"></param>
+    /// <returns></returns>
+    public static async Task OcrWindow(
+        [ArgsIndex] string hWnd,
+        [ArgsIndex] string? outputPath=null)
+    {
+        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
+        using var bmp = window.CaptureForeground();
+        var imagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
+        bmp.Save(imagePath,ImageFormat.Png);
+        var tesseractPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), "data", "tesseract", "tesseract.exe");
+        if (File.Exists(tesseractPath) == false)
+        {
+            var archivePath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), "data", "tesseract.7z");
+            var extractPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), "data", "tesseract");
+            if(File.Exists(archivePath))
+            {
+                await CompressCommands.Extract(archivePath, extractPath);
+            }
+        }
+        if (File.Exists(tesseractPath) == false)
+        {
+            throw new Exception("tesseract.exe 不存在");
+        }
+        var process = new Process();
+        var tempPath = Path.GetTempFileName();
+        process.StartInfo.FileName = tesseractPath;
+        process.StartInfo.ArgumentList.Add(imagePath);
+        process.StartInfo.ArgumentList.Add(tempPath);
+        process.StartInfo.ArgumentList.Add("-l");
+        process.StartInfo.ArgumentList.Add("eng+chi_sim");
+        process.StartInfo.ArgumentList.Add("tsv");
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.CreateNoWindow = true;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.OutputDataReceived += (sender, e) =>
+        {
+            //Console.WriteLine(e.Data);
+        };
+        process.Start();
+        process.BeginOutputReadLine();
+        await process.WaitForExitAsync();
+        var tsvLines = File.ReadAllLines(tempPath, Util.UTF8);
+        Json result = Json.NewObject();
+        var blocks = result.GetOrCreateArray("blocks");
+        foreach (var line in tsvLines)
+        {
+            var items = line.Split('\t');
+            if (items.Length == 12)
+            {
+                var block = Json.NewObject();
+                block["level"] = items[0];
+                block["page_num"] = items[1];
+                block["block_num"] = items[2];
+                block["par_num"] = items[3];
+                block["line_num"] = items[4];
+                block["word_num"] = items[5];
+                block["left"] = items[6];
+                block["top"] = items[7];
+                block["width"] = items[8];
+                block["height"] = items[9];
+                block["conf"] = items[10];
+                block["text"] = items[11];
+                blocks.Add(block);
+            }
+        }
+        if (outputPath != null)
+        {
+            result.Save(outputPath);
+        }
+        else
+        {
+            Console.WriteLine(result.ToString());
+        }
+    } 
 }

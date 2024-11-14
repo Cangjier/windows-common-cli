@@ -24,6 +24,10 @@ argsRouter.Register(["close-window"], WindowCommands.CloseWindow);
 argsRouter.Register(["mouse-move"], WindowCommands.MouseMove);
 argsRouter.Register(["mouse-move-to"], WindowCommands.MouseMoveTo);
 argsRouter.Register(["mouse-click"], WindowCommands.MouseClick);
+argsRouter.Register(["mouse-click-window"], WindowCommands.MouseClickWindow);
+argsRouter.Register(["mouse-click-window-at"], WindowCommands.MouseClickWindowAt);
+argsRouter.Register(["mouse-click-window-at-ratio"], WindowCommands.MouseClickWindowAtRatio);
+argsRouter.Register(["ocr-window"], WindowCommands.OcrWindow);
 
 // io
 argsRouter.Register(["copy-directory"], IOCommands.CopyDirectory);
