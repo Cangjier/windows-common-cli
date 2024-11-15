@@ -497,20 +497,29 @@ public class WindowCommands
     /// <param name="hWnd"></param>
     /// <param name="xRatio"></param>
     /// <param name="yRatio"></param>
+    /// <param name="delay"></param>
     /// <returns></returns>
     public static async Task MouseClickWindowAtRatio(
         [ArgsIndex] string hWnd,
         [ArgsIndex]string xRatio,
-        [ArgsIndex]string yRatio)
+        [ArgsIndex]string yRatio,
+        [ArgsAliases("--delay")] string delay = "")
     {
         await Task.CompletedTask;
+        int delayTime = 0;
+        if (delay != "")
+        {
+            delayTime = int.Parse(delay);
+        }
         Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
         var location = window.Location;
         var size = window.Size;
         var x = location.X + size.Width * double.Parse(xRatio);
         var y = location.Y + size.Height * double.Parse(yRatio);
         window.SetForeground();
+        if (delayTime > 0) await Task.Delay(delayTime);
         Win32.MouseInterface.MoveTo((int)x, (int)y);
+        if (delayTime > 0) await Task.Delay(delayTime);
         Win32.MouseInterface.Click();
     }
 
@@ -520,6 +529,7 @@ public class WindowCommands
     /// <param name="hWnd"></param>
     /// <param name="xDelta"></param>
     /// <param name="yDelta"></param>
+    /// <param name="delay"></param>
     /// <returns></returns>
     public static async Task MouseClickWindowAt(
         [ArgsIndex] string hWnd,
