@@ -27,6 +27,7 @@ argsRouter.Register(["mouse-click"], WindowCommands.MouseClick);
 argsRouter.Register(["mouse-click-window"], WindowCommands.MouseClickWindow);
 argsRouter.Register(["mouse-click-window-at"], WindowCommands.MouseClickWindowAt);
 argsRouter.Register(["mouse-click-window-at-ratio"], WindowCommands.MouseClickWindowAtRatio);
+argsRouter.Register(["focus-window"], WindowCommands.FocusWindow);
 argsRouter.Register(["ocr-window"], WindowCommands.OcrWindow);
 
 // io

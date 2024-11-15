@@ -7,7 +7,7 @@ namespace WindowsCommonCLI.Windows;
 /// <summary>
 /// 路径项
 /// </summary>
-public class Window(Json target)
+public class WindowRule(Json target)
 {
     /// <summary>
     /// 封装对象
@@ -18,16 +18,16 @@ public class Window(Json target)
     /// Implicit convert to PathItem
     /// </summary>
     /// <param name="json"></param>
-    public static implicit operator Window(Json json)
+    public static implicit operator WindowRule(Json json)
     {
-        return new Window(json);
+        return new WindowRule(json);
     }
 
     /// <summary>
     /// Implicit convert to Json
     /// </summary>
     /// <param name="item"></param>
-    public static implicit operator Json(Window item)
+    public static implicit operator Json(WindowRule item)
     {
         return item.Target;
     }
@@ -62,7 +62,12 @@ public class Window(Json target)
     /// <summary>
     /// 启用
     /// </summary>
-    public string Enable => Target.Read(nameof(Enable), string.Empty);
+    public string Enable => Target.Read(nameof(Enable), "true");
+
+    /// <summary>
+    /// 是否可见
+    /// </summary>
+    public string Visible => Target.Read(nameof(Visible), "true");
 
     /// <summary>
     /// 是否满足
@@ -99,6 +104,14 @@ public class Window(Json target)
         {
             var enale = Enable == "true";
             if (window.Enable != enale)
+            {
+                return false;
+            }
+        }
+        if (string.IsNullOrEmpty(Visible) == false)
+        {
+            var value = Visible == "true";
+            if (window.Visible != value)
             {
                 return false;
             }

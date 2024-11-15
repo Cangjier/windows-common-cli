@@ -498,12 +498,14 @@ public class WindowCommands
     /// <param name="xRatio"></param>
     /// <param name="yRatio"></param>
     /// <param name="delay"></param>
+    /// <param name="method"></param>
     /// <returns></returns>
     public static async Task MouseClickWindowAtRatio(
         [ArgsIndex] string hWnd,
         [ArgsIndex]string xRatio,
         [ArgsIndex]string yRatio,
-        [ArgsAliases("--delay")] string delay = "")
+        [ArgsAliases("--delay")] string delay = "",
+        [ArgsAliases("--method")] string method="")
     {
         await Task.CompletedTask;
         int delayTime = 0;
@@ -520,7 +522,16 @@ public class WindowCommands
         if (delayTime > 0) await Task.Delay(delayTime);
         Win32.MouseInterface.MoveTo((int)x, (int)y);
         if (delayTime > 0) await Task.Delay(delayTime);
-        Win32.MouseInterface.Click();
+        window.Focus();
+        if (delayTime > 0) await Task.Delay(delayTime);
+        if (method == "" || method == "send-input" || method == "0")
+        {
+            Win32.MouseInterface.Click();
+        }
+        else if(method == "1" || method == "mouse-event")
+        {
+            Win32.MouseInterface.Click2();
+        }
     }
 
     /// <summary>
@@ -553,6 +564,19 @@ public class WindowCommands
         Win32.MouseInterface.MoveTo((int)x, (int)y);
         if (delayTime > 0) await Task.Delay(delayTime);
         Win32.MouseInterface.Click();
+    }
+
+    /// <summary>
+    /// 鼠标点击指定窗口
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <returns></returns>
+    public static async Task FocusWindow(
+        [ArgsIndex] string hWnd)
+    {
+        await Task.CompletedTask;
+        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
+        window.Focus();
     }
 
     /// <summary>

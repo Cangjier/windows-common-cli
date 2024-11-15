@@ -131,6 +131,7 @@ export interface Window{
     Title?:string,
     ClassName?:string,
     Enable?:"true"|"false",
+    Visible?:"true"|"false",
     Interval?:number,//匹配时间间隔
     Timeout?:number,//匹配超时设定
 }

@@ -37,7 +37,7 @@ public class WindowState(Json target)
     {
         int interval = 0;
         int timeout = 0;
-        List<Window> windows = [];
+        List<WindowRule> windows = [];
         if (Target.IsObject)
         {
             windows.Add(Target);
@@ -104,7 +104,7 @@ public class WindowState(Json target)
     {
         int interval = 0;
         int timeout = 0;
-        List<Window> rules = [];
+        List<WindowRule> rules = [];
         if (Target.IsObject)
         {
             rules.Add(Target);
@@ -137,11 +137,19 @@ public class WindowState(Json target)
             {
                 if (firsRule.IsMatch(window))
                 {
-                    Match(nextRules, [window], x =>
+                    if(nextRules.Length > 0)
                     {
-                        matchResult = x;
-                        return MatchFlag.StopMatch;
-                    });
+                        Match(nextRules, [window], x =>
+                        {
+                            matchResult = x;
+                            return MatchFlag.StopMatch;
+                        });
+                    }
+                    else
+                    {
+                        matchResult = [window];
+                        break;
+                    }
                 }
             }
             if (matchResult != null)
@@ -169,7 +177,7 @@ public class WindowState(Json target)
     /// <param name="rules"></param>
     /// <param name="parentWindows"></param>
     /// <param name="onMatch"></param>
-    public static void Match(Window[] rules, Win32.WindowInterface[] parentWindows, Func<Win32.WindowInterface[],MatchFlag> onMatch)
+    public static void Match(WindowRule[] rules, Win32.WindowInterface[] parentWindows, Func<Win32.WindowInterface[],MatchFlag> onMatch)
     {
         var windows = parentWindows.Last().GetChildren();
         var firstRule = rules.First();

@@ -12,7 +12,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TidyConsole" Version="1.0.5" />
-    <PackageReference Include="TidyWin32" Version="1.0.3" />
+    <PackageReference Include="TidyWin32" Version="1.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TidyWin32\TidyWin32.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="data\7-zip.dll">
