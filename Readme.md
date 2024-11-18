@@ -165,13 +165,31 @@ wcl.exe mouse-move-to {X} {Y}
 wcl.exe mouse-click
 ```
 
+## mouse-click-window
+
+```
+mouse-click-window {hWnd}
+```
+
+## mouse-click-window-at
+
+```
+mouse-click-window-at {hWnd} {xDelta} {yDelta} --delay {Delay}
+```
+
+## mouse-click-window-at-ratio
+
+```
+mouse-click-window-at-ratio {hWnd} {xRatio} {yRatio} --delay {Delay}
+```
+
 ## keyboard
 
 ```
-keyboard {Keys}
+keyboard {Keys} --delay {Delay}
 ```
 
-- Keys: 需要模拟的Key，如Down,F,F,1,F 
+- Keys: 需要模拟的Key，如Down,F,F,1,F1 
 
 # Markdown
 

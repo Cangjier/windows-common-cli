@@ -389,11 +389,18 @@ public class WindowCommands
     /// 模拟键盘操作
     /// </summary>
     /// <param name="keys"></param>
+    /// <param name="delay"></param>
     /// <returns></returns>
     public static async Task Keyboard(
-        [ArgsIndex] string keys)
+        [ArgsIndex] string keys,
+        [ArgsAliases("--delay")]string delay="")
     {
         await Task.CompletedTask;
+        int delayTime = 0;
+        if (delay != "")
+        {
+            delayTime = int.Parse(delay);
+        }
         var keyList = keys.Split(",");
         var enumNames = Enum.GetNames(typeof(Win32.Keys));
         foreach (var key in keyList)
@@ -410,6 +417,7 @@ public class WindowCommands
                     Win32.KeyboardInterface.SendKey((Win32.Keys)Enum.Parse(typeof(Win32.Keys), enumName));
                 }
             }
+            if (delayTime > 0) await Task.Delay(delayTime);
         }
     }
 
