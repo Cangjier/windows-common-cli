@@ -5,7 +5,7 @@ using WindowsCommonCLI.Windows;
 Self.aesKey = Guid.Parse("A3739409-1DD2-4A6A-A4B6-BCC73D56C856");
 Self.args = args;
 ArgsRouter argsRouter = new();
-argsRouter.Register(["get-window"], WindowCommands.GetWindow);
+argsRouter.Register(["get-window","window"], WindowCommands.GetWindow);
 argsRouter.Register(["list-windows"], WindowCommands.List);
 argsRouter.Register(["list-user-windows"], WindowCommands.ListUser);
 argsRouter.Register(["list-children-windows"], WindowCommands.ListChildren);

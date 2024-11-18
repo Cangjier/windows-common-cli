@@ -12,7 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TidyConsole" Version="1.0.5" />
-    <PackageReference Include="TidyWin32" Version="1.0.5" />
+    <PackageReference Include="TidyWin32" Version="1.0.7" />
   </ItemGroup>
   <ItemGroup>
     <None Update="data\7-zip.dll">

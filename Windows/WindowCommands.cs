@@ -350,12 +350,26 @@ public class WindowCommands
     /// <returns></returns>
     public static async Task GetWindow(
         [ArgsIndex] string hWnd,
-        [ArgsIndex] string outputPath)
+        [ArgsIndex] string? outputPath=null)
     {
         await Task.CompletedTask;
         Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
         window.InitializeInfomation();
-        window.Target.Save(outputPath);
+        var children = window.GetChildren();
+        var childrenArray = window.Target.GetOrCreateArray("Children");
+        foreach (var child in children)
+        {
+            child.InitializeInfomation();
+            childrenArray.Add(child.Target);
+        }
+        if (outputPath != null)
+        {
+            window.Target.Save(outputPath);
+        }
+        else
+        {
+            Console.WriteLine(window.Target.ToString());
+        }
     }
 
     /// <summary>
