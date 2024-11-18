@@ -165,6 +165,14 @@ wcl.exe mouse-move-to {X} {Y}
 wcl.exe mouse-click
 ```
 
+## keyboard
+
+```
+keyboard {Keys}
+```
+
+- Keys: 需要模拟的Key，如Down,F,F,1,F 
+
 # Markdown
 
 ## markdown-increase

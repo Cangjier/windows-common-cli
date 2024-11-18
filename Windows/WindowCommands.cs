@@ -386,6 +386,34 @@ public class WindowCommands
     }
 
     /// <summary>
+    /// 模拟键盘操作
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <returns></returns>
+    public static async Task Keyboard(
+        [ArgsIndex] string keys)
+    {
+        await Task.CompletedTask;
+        var keyList = keys.Split(",");
+        var enumNames = Enum.GetNames(typeof(Win32.Keys));
+        foreach (var key in keyList)
+        {
+            if (int.TryParse(key, out int keyCode))
+            {
+                Win32.KeyboardInterface.SendKey((Win32.Keys)keyCode);
+            }
+            else
+            {
+                var enumName = enumNames.FirstOrDefault(x => x.ToLower() == key.ToLower());
+                if (enumName != null)
+                {
+                    Win32.KeyboardInterface.SendKey((Win32.Keys)Enum.Parse(typeof(Win32.Keys), enumName));
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// 激活英文键盘
     /// </summary>
     /// <returns></returns>

@@ -29,6 +29,7 @@ argsRouter.Register(["mouse-click-window-at"], WindowCommands.MouseClickWindowAt
 argsRouter.Register(["mouse-click-window-at-ratio"], WindowCommands.MouseClickWindowAtRatio);
 argsRouter.Register(["focus-window"], WindowCommands.FocusWindow);
 argsRouter.Register(["ocr-window"], WindowCommands.OcrWindow);
+argsRouter.Register(["keyboard"], WindowCommands.Keyboard);
 
 // io
 argsRouter.Register(["copy-directory"], IOCommands.CopyDirectory);
