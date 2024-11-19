@@ -183,6 +183,12 @@ mouse-click-window-at {hWnd} {xDelta} {yDelta} --delay {Delay}
 mouse-click-window-at-ratio {hWnd} {xRatio} {yRatio} --delay {Delay}
 ```
 
+## set-current-tab
+
+```
+set-current-tab {hWnd} {Index}
+```
+
 ## keyboard
 
 ```

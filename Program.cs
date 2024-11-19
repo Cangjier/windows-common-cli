@@ -29,6 +29,7 @@ argsRouter.Register(["mouse-click-window-at"], WindowCommands.MouseClickWindowAt
 argsRouter.Register(["mouse-click-window-at-ratio"], WindowCommands.MouseClickWindowAtRatio);
 argsRouter.Register(["focus-window"], WindowCommands.FocusWindow);
 argsRouter.Register(["ocr-window"], WindowCommands.OcrWindow);
+argsRouter.Register(["set-current-tab"], WindowCommands.SetCurrentTab);
 argsRouter.Register(["keyboard"], WindowCommands.Keyboard);
 
 // io

@@ -630,6 +630,21 @@ public class WindowCommands
     }
 
     /// <summary>
+    /// 设置当前Tab页
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="current"></param>
+    /// <returns></returns>
+    public static async Task SetCurrentTab(
+        [ArgsIndex] string hWnd,
+        [ArgsIndex] string current)
+    {
+        await Task.CompletedTask;
+        Win32.TabControlInterface window = Util.ConvertStringToIntptr(hWnd);
+        window.Current = int.Parse(current);
+    }
+
+    /// <summary>
     /// OCR窗口
     /// </summary>
     /// <param name="hWnd"></param>
