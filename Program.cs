@@ -18,6 +18,7 @@ argsRouter.Register(["select-combobox-index"], WindowCommands.SelectComboboxInde
 argsRouter.Register(["select-combobox-text"], WindowCommands.SelectComboboxText);
 argsRouter.Register(["send-text"], WindowCommands.SendText);
 argsRouter.Register(["send-keys"], WindowCommands.SendKeys);
+argsRouter.Register(["send-keys-with-file"], WindowCommands.SendKeysWithFile);
 argsRouter.Register(["active-english-keyboard"], WindowCommands.ActiveEnglishKeyboard);
 argsRouter.Register(["match-window"], WindowCommands.MatchWindow);
 argsRouter.Register(["close-window"], WindowCommands.CloseWindow);

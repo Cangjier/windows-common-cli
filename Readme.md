@@ -107,6 +107,18 @@ wcl.exe send-text {Text}
 wcl.exe send-keys {hWnd} {Keys}
 ```
 
+kes支持转义，如
+
+```
+wcl.exe send-keys 0x00001 hello\nworld
+```
+
+## send-keys-with-file
+
+```
+wcl.exe send-keys {hWnd} {filePath}
+```
+
 ## active-english-keyboard
 
 激活英文输入法

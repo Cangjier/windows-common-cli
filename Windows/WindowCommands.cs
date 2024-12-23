@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing.Imaging;
+using System.Text;
 using System.Text.RegularExpressions;
 using TidyHPC.LiteJson;
 using TidyHPC.Routers;
@@ -384,7 +385,97 @@ public class WindowCommands
     {
         await Task.CompletedTask;
         Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
-        window.SendKeys(keys);
+        StringBuilder translateKeys = new();
+        bool isTranslate = false;
+        StringBuilder cache = new();
+        foreach (var key in keys)
+        {
+            if (isTranslate == false)
+            {
+                if (key == '\\')
+                {
+                    isTranslate = true;
+                }
+                else
+                {
+                    translateKeys.Append(key);
+                }
+            }
+            else
+            {
+                if (cache.Length == 0)
+                {
+                    if (key == 'n')
+                    {
+                        translateKeys.Append('\n');
+                        isTranslate = false;
+                    }
+                    else if (key == 'r')
+                    {
+                        translateKeys.Append('\r');
+                        isTranslate = false;
+                    }
+                    else if (key == 't')
+                    {
+                        translateKeys.Append('\t');
+                        isTranslate = false;
+                    }
+                    else if (key >= '0' && key <= '9')
+                    {
+                        cache.Append(key);
+                    }
+                    else
+                    {
+                        translateKeys.Append(key);
+                        isTranslate = false;
+                    }
+                }
+                else
+                {
+                    if (key >= '0' && key <= '9')
+                    {
+                        cache.Append(key);
+                    }
+                    else
+                    {
+                        translateKeys.Append((char)int.Parse(cache.ToString()));
+                        cache.Clear();
+                        isTranslate = false;
+                        if (key == '\\')
+                        {
+                            isTranslate = true;
+                        }
+                        else
+                        {
+                            translateKeys.Append(key);
+                        }
+                    }
+                }
+            }
+
+        }
+        if(cache.Length > 0)
+        {
+            translateKeys.Append((char)int.Parse(cache.ToString()));
+            cache.Clear();
+        }
+        window.SendKeys(translateKeys.ToString());
+    }
+
+    /// <summary>
+    /// 发送按键，从文件中读取
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    public static async Task SendKeysWithFile(
+        [ArgsIndex] string hWnd,
+        [ArgsIndex] string filePath)
+    {
+        await Task.CompletedTask;
+        Win32.WindowInterface window = Util.ConvertStringToIntptr(hWnd);
+        var text = File.ReadAllText(filePath, Util.UTF8);
+        window.SendKeys(text);
     }
 
     /// <summary>
